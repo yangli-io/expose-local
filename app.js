@@ -1,11 +1,12 @@
 var http = require('http');
+var qs = require('querystring');
 
 var queue = {}
 var count = 0;
 
 http.createServer(function(req, res){
 	res.writeHead(200, { 'Content-Type': 'text/plain' });
-	if (req.url != '/get'){
+	if (req.url != '/get' && req.url != '/post'){
 			queue[count] = {
 			url: req.url,
 			data: ""
@@ -16,9 +17,25 @@ http.createServer(function(req, res){
 			this.unwatch('data');
 		})
 		count++;
-	} else {
+	} else if (req.url === '/get'){
 		res.write(JSON.stringify(queue, true));
 		res.end();
+	} else if (req.url === '/post'){
+		if (req.method === 'POST'){
+			var body = "";
+			req.on('data', function(){
+				body += data;
+				if (body.length > 1000000){
+					req.connection.destroy();
+				}
+			})
+			req.on('end', function(){
+				var post = qs.parse(body);
+				queue[post.count].data = post.data;
+				res.write('done');
+				res.end();
+			})
+		}
 	}
 
 }).listen(process.env.PORT || 9000)
