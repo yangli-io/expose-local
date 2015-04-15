@@ -11,4 +11,4 @@ http.createServer(function(req, res){
 	res.writeHead(200, { 'Content-Type': 'text/plain' });
 	res.write("yolo");
 	res.end();
-}).listen(9000)
+}).listen(process.env.PORT || 9000)
