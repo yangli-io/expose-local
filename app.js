@@ -7,7 +7,8 @@ var count = 0;
 http.createServer(function(req, res){
 	res.writeHead(200, { 'Content-Type': 'text/plain' });
 	if (req.url != '/get' && req.url != '/post'){
-			queue[count] = {
+		queue[count] = {
+			count: count,
 			url: req.url,
 			data: ""
 		}
