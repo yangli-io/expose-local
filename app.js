@@ -32,7 +32,8 @@ http.createServer(function(req, res){
 			})
 			req.on('end', function(){
 				var post = qs.parse(body);
-				queue[post.count].data = post.data;
+				if (queue[post.count])
+					queue[post.count].data = post.data;
 				res.write('done');
 				res.end();
 			})
