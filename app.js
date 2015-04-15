@@ -24,7 +24,7 @@ http.createServer(function(req, res){
 	} else if (req.url === '/post'){
 		if (req.method === 'POST'){
 			var body = "";
-			req.on('data', function(){
+			req.on('data', function(data){
 				body += data;
 				if (body.length > 1000000){
 					req.connection.destroy();
