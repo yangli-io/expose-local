@@ -32,8 +32,10 @@ http.createServer(function(req, res){
 			})
 			req.on('end', function(){
 				var post = qs.parse(body);
-				if (queue[post.count])
+				if (queue[post.count]){
 					queue[post.count].data = post.data;
+					delete queue[post.count];
+				}
 				res.write('done');
 				res.end();
 			})
@@ -41,33 +43,6 @@ http.createServer(function(req, res){
 	}
 
 }).listen(process.env.PORT || 9000)
-
-setInterval(function(){
-	for (key in queue){
-		if (queue[key].data){
-			delete queue[key];
-		}
-	}
-},10000)
-
-
-function getIP(req){
-	var ip = {
-		connection: {
-			remoteAddress: req.connection && req.connection.remoteAddress,
-			socket: {
-				remoteAddress: req.connection && req.connection.socket && req.connection.socket.remoteAddress
-			}
-		},
-		socket: {
-			remoteAddress: req.socket && req.socket.remoteAddress
-		}
-	}
-	ip['x-forwarded-for'] = req.headers && req.headers['x-forwarded-for'];
-	return JSON.stringify(ip, true);
-}
-
-
 
 if (!Object.prototype.watch) {
 	Object.defineProperty(Object.prototype, "watch", {
