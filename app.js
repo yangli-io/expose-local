@@ -1,6 +1,6 @@
 var http = require('http');
 
-var queue = []
+var queue = {}
 var count = 0;
 
 http.createServer(function(req, res){
@@ -22,6 +22,14 @@ http.createServer(function(req, res){
 	}
 
 }).listen(process.env.PORT || 9000)
+
+setInterval(function(){
+	for (key in queue){
+		if (queue[key].data){
+			delete queue[key];
+		}
+	}
+},10000)
 
 
 function getIP(req){
